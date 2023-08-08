@@ -1,0 +1,94 @@
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type _Accept @entity(immutable: true) {
+  id: Bytes!
+  _auctionId: BigInt! # uint256
+  owner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type _Bid @entity(immutable: true) {
+  id: Bytes!
+  _auctionId: BigInt! # uint256
+  bidder: Bytes! # address
+  bidAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type _Buy @entity(immutable: true) {
+  id: Bytes!
+  _auctionId: BigInt! # uint256
+  buyer: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type _CancelBid @entity(immutable: true) {
+  id: Bytes!
+  _auctionId: BigInt! # uint256
+  bidder: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type _CancelFixedSale @entity(immutable: true) {
+  id: Bytes!
+  _auctionId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type _Claim @entity(immutable: true) {
+  id: Bytes!
+  _auctionid: BigInt! # uint256
+  tokenId: BigInt! # uint256
+  owner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type _CreateAuction @entity(immutable: true) {
+  id: Bytes!
+  _auctionIds: [Int!]! # uint8[]
+  _symbol: [String!]! # string[]
+  _minBidAmount: BigInt! # uint256
+  _endTime: BigInt! # uint256
+  owner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type _CreateFixedSale @entity(immutable: true) {
+  id: Bytes!
+  _auctionId: BigInt! # uint256
+  _tokenId: BigInt! # uint256
+  _price: BigInt! # uint256
+  owner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type _DeleteMarketItem @entity(immutable: true) {
+  id: Bytes!
+  auctionId: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

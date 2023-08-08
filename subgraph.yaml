@@ -1,0 +1,51 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Marketplace
+    network: mumbai
+    source:
+      address: "0xcf305b89e1B836B72E7eE4bEf189A1b7a9773e8f"
+      abi: Marketplace
+      startBlock: 38767044
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - OwnershipTransferred
+        - _Accept
+        - _Bid
+        - _Buy
+        - _CancelBid
+        - _CancelFixedSale
+        - _Claim
+        - _CreateAuction
+        - _CreateFixedSale
+        - _DeleteMarketItem
+      abis:
+        - name: Marketplace
+          file: ./abis/Marketplace.json
+      eventHandlers:
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: _Accept(uint256,address)
+          handler: handle_Accept
+        - event: _Bid(uint256,address,uint256)
+          handler: handle_Bid
+        - event: _Buy(uint256,address)
+          handler: handle_Buy
+        - event: _CancelBid(uint256,address)
+          handler: handle_CancelBid
+        - event: _CancelFixedSale(uint256)
+          handler: handle_CancelFixedSale
+        - event: _Claim(uint256,uint256,address)
+          handler: handle_Claim
+        - event: _CreateAuction(uint8[],string[],uint256,uint256,indexed address)
+          handler: handle_CreateAuction
+        - event: _CreateFixedSale(uint256,uint256,uint256,address)
+          handler: handle_CreateFixedSale
+        - event: _DeleteMarketItem(uint256)
+          handler: handle_DeleteMarketItem
+      file: ./src/marketplace.ts
