@@ -5,6 +5,7 @@ import {
   _Bid,
   _Claim,
   MarketPlace,
+  _CancelFixedSale as _CancelFixedSaleEvent,
 } from "../generated/MarketPlace/MarketPlace";
 import { BillionsNFT } from "../generated/MarketPlace/BillionsNFT";
 import { Marketplace, Bidder } from "../generated/schema";
@@ -113,4 +114,15 @@ export function handle_Claim(event: _Claim): void {
   auction.tokenId = tokenId;
   auction.status = "Finished";
   auction.save();
+}
+
+export function handle_CancelFixedSale(event: _CancelFixedSaleEvent): void {
+  let auctionId = event.params._auctionId.toString();
+
+  let marketplace = Marketplace.load(auctionId);
+
+  if (!marketplace) return;
+
+  marketplace.status = "Cancelled";
+  marketplace.save();
 }

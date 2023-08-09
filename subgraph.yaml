@@ -31,16 +31,14 @@ dataSources:
           handler: handle_Bid
         - event: _Buy(uint256,address)
           handler: handle_Buy
-        # - event: _CancelBid(uint256,address)
-        #   handler: handle_CancelBid
         - event: _Claim(uint256,uint256,address)
           handler: handle_Claim
         - event: _CreateAuction(uint8[],string[],uint256,uint256,indexed address)
           handler: handle_CreateAuction
         - event: _CreateFixedSale(uint256,uint256,uint256,address)
           handler: handle_CreateFixedSale
-        # - event: _DeleteMarketItem(uint256)
-        #   handler: handle_DeleteMarketItem
+        - event: _CancelFixedSale(uint256)
+          handler: handle_CancelFixedSale
       file: ./src/market-place.ts
   - kind: ethereum
     name: ScalarNFT
