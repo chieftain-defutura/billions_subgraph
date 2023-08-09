@@ -1,13 +1,13 @@
 {
-  "name": "billions-quest",
+  "name": "Billions",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ billions-quest",
-    "create-local": "graph create --node http://localhost:8020/ billions-quest",
-    "remove-local": "graph remove --node http://localhost:8020/ billions-quest",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 billions-quest",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ Billions",
+    "create-local": "graph create --node http://localhost:8020/ Billions",
+    "remove-local": "graph remove --node http://localhost:8020/ Billions",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 Billions",
     "test": "graph test"
   },
   "dependencies": {

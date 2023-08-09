@@ -248,30 +248,62 @@
   {
     "inputs": [],
     "name": "AuctionId",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "PLYTokenAddress",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "USDTTokenAddress",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "auctions",
     "outputs": [
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "internalType": "string", "name": "symbol", "type": "string" },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
       {
         "internalType": "uint256",
         "name": "miniumBidAmount",
@@ -287,27 +319,47 @@
         "name": "currentBidAmount",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "startTime", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "startTime",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "auctionEndTime",
         "type": "uint256"
       },
-      { "internalType": "bool", "name": "isAuction", "type": "bool" },
+      {
+        "internalType": "bool",
+        "name": "isAuction",
+        "type": "bool"
+      },
       {
         "internalType": "enum MarketPlaceContract.AuctionStatus",
         "name": "status",
         "type": "uint8"
       },
-      { "internalType": "address", "name": "nftOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "nftOwner",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_auctionId", "type": "uint256" },
-      { "internalType": "uint256", "name": "bidAmount", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_auctionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bidAmount",
+        "type": "uint256"
+      }
     ],
     "name": "bidOnAuction",
     "outputs": [],
@@ -317,13 +369,23 @@
   {
     "inputs": [],
     "name": "billionsNftAddress",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_auctionId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_auctionId",
+        "type": "uint256"
+      }
     ],
     "name": "buyOnFixedSale",
     "outputs": [],
@@ -332,7 +394,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_auctionId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_auctionId",
+        "type": "uint256"
+      }
     ],
     "name": "cancelFixedSale",
     "outputs": [],
@@ -341,7 +407,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_auctionId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_auctionId",
+        "type": "uint256"
+      }
     ],
     "name": "claimPendingAmount",
     "outputs": [],
@@ -350,9 +420,21 @@
   },
   {
     "inputs": [
-      { "internalType": "string[]", "name": "_symbol", "type": "string[]" },
-      { "internalType": "uint256", "name": "_minBidAmount", "type": "uint256" },
-      { "internalType": "uint256", "name": "endTime", "type": "uint256" }
+      {
+        "internalType": "string[]",
+        "name": "_symbol",
+        "type": "string[]"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_minBidAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "endTime",
+        "type": "uint256"
+      }
     ],
     "name": "createAuction",
     "outputs": [],
@@ -361,8 +443,16 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
-      { "internalType": "uint256", "name": "_price", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_price",
+        "type": "uint256"
+      }
     ],
     "name": "createFixedSale",
     "outputs": [],
@@ -371,7 +461,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_auctionId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_auctionId",
+        "type": "uint256"
+      }
     ],
     "name": "distributeNft",
     "outputs": [],
@@ -380,12 +474,24 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_auctionId", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_auctionId",
+        "type": "uint256"
+      }
     ],
     "name": "getAuctionInfo",
     "outputs": [
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "internalType": "string", "name": "symbol", "type": "string" },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
       {
         "internalType": "uint256",
         "name": "miniumBidAmount",
@@ -406,25 +512,45 @@
         "name": "auctionEndTime",
         "type": "uint256"
       },
-      { "internalType": "bool", "name": "isAuction", "type": "bool" },
+      {
+        "internalType": "bool",
+        "name": "isAuction",
+        "type": "bool"
+      },
       {
         "internalType": "enum MarketPlaceContract.AuctionStatus",
         "name": "status",
         "type": "uint8"
       },
-      { "internalType": "address", "name": "nftOwner", "type": "address" },
-      { "internalType": "address[]", "name": "bidders", "type": "address[]" }
+      {
+        "internalType": "address",
+        "name": "nftOwner",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "bidders",
+        "type": "address[]"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "userAddress", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "userAddress",
+        "type": "address"
+      }
     ],
     "name": "getUserBidInfo",
     "outputs": [
-      { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -432,7 +558,13 @@
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -446,7 +578,13 @@
   {
     "inputs": [],
     "name": "scalarNftAddress",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -478,7 +616,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_rewardPrice", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_rewardPrice",
+        "type": "uint256"
+      }
     ],
     "name": "setRewardPrice",
     "outputs": [],
@@ -512,15 +654,31 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "string", "name": "", "type": "string" }],
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
     "name": "symbolUsed",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],
@@ -529,11 +687,25 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "", "type": "address" },
-      { "internalType": "uint256", "name": "", "type": "uint256" }
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
     "name": "userBidInfo",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   }

@@ -6,12 +6,11 @@ import {
   _Bid,
   _Buy,
   _CancelBid,
-  _CancelFixedSale,
   _Claim,
   _CreateAuction,
   _CreateFixedSale,
   _DeleteMarketItem
-} from "../generated/Marketplace/Marketplace"
+} from "../generated/MarketPlaceContract/MarketPlaceContract"
 
 export function createOwnershipTransferredEvent(
   previousOwner: Address,
@@ -122,23 +121,6 @@ export function create_CancelBidEvent(
   )
 
   return cancelBidEvent
-}
-
-export function create_CancelFixedSaleEvent(
-  _auctionId: BigInt
-): _CancelFixedSale {
-  let cancelFixedSaleEvent = changetype<_CancelFixedSale>(newMockEvent())
-
-  cancelFixedSaleEvent.parameters = new Array()
-
-  cancelFixedSaleEvent.parameters.push(
-    new ethereum.EventParam(
-      "_auctionId",
-      ethereum.Value.fromUnsignedBigInt(_auctionId)
-    )
-  )
-
-  return cancelFixedSaleEvent
 }
 
 export function create_ClaimEvent(
