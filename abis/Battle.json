@@ -1,12 +1,6 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_addr",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -137,6 +131,48 @@
         "internalType": "uint256",
         "name": "_battleId",
         "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "exchange",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "nftCount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "entryFee",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "startTime",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "endTime",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "battleType",
+        "type": "uint256"
       }
     ],
     "name": "_CreateBattle",
@@ -258,13 +294,13 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_contestType",
+        "name": "_battleType",
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_battleType",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "_exchange",
+        "type": "string"
       },
       {
         "internalType": "uint256",
@@ -278,7 +314,12 @@
       },
       {
         "internalType": "uint256",
-        "name": "_epoch",
+        "name": "_startTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_endTime",
         "type": "uint256"
       }
     ],
@@ -323,9 +364,9 @@
             "type": "uint256"
           },
           {
-            "internalType": "uint256",
-            "name": "contestType",
-            "type": "uint256"
+            "internalType": "string",
+            "name": "exchange",
+            "type": "string"
           },
           {
             "internalType": "uint256",
@@ -344,7 +385,7 @@
           },
           {
             "internalType": "uint256",
-            "name": "enterFee",
+            "name": "entryFee",
             "type": "uint256"
           },
           {
@@ -355,6 +396,16 @@
           {
             "internalType": "uint256",
             "name": "extraRewards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
             "type": "uint256"
           },
           {
@@ -366,72 +417,6 @@
         "internalType": "struct BattleContract.BattleInfo",
         "name": "",
         "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_epoch",
-        "type": "uint256"
-      }
-    ],
-    "name": "GetBattles",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "battleId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "contestType",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "battleType",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "creatorAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "nftCount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "enterFee",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "epoch",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "extraRewards",
-            "type": "uint256"
-          },
-          {
-            "internalType": "enum BattleContract.BattleState",
-            "name": "state",
-            "type": "uint8"
-          }
-        ],
-        "internalType": "struct BattleContract.BattleInfo[]",
-        "name": "_battles",
-        "type": "tuple[]"
       }
     ],
     "stateMutability": "view",
@@ -677,13 +662,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "StartBattles",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -692,6 +670,29 @@
       }
     ],
     "name": "WithdrawRevenue",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_billionsNft",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_scalarNft",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_playToken",
+        "type": "address"
+      }
+    ],
+    "name": "_initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -773,38 +774,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "currentEpoch",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "forwarder",
-        "type": "address"
-      }
-    ],
-    "name": "isTrustedForwarder",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -940,68 +909,16 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "sinkReserveAddress",
+    "outputs": [
       {
-        "internalType": "uint256[]",
-        "name": "ranks",
-        "type": "uint256[]"
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
-    "name": "setBonusPercent",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "leader",
-        "type": "uint256"
-      }
-    ],
-    "name": "setLeaderBonus",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "rake",
-        "type": "uint256"
-      }
-    ],
-    "name": "setRakePercent",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "ranks",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "setRankPercent",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "ranks",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "setRewardPercent",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1019,19 +936,6 @@
   },
   {
     "inputs": [],
-    "name": "trustedForwarder",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "validWithdrawAmount",
     "outputs": [
       {
@@ -1041,6 +945,30 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_addr",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawFund",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]

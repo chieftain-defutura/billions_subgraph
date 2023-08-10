@@ -77,11 +77,15 @@ type Battle @entity {
   startTime: BigInt!
   endTime: BigInt!
   entryfee: BigInt!
+  nftCount: BigInt!
+  owner: User!
+  participants: [Participant!]!
 }
 
-type Participate @entity {
+type Participant @entity {
   id: ID!
-  userId: BigInt!
-  billionsNft: [BillionsNFT!]!
-  scalarNft: [ScalarNFT!]!
+  battleId: BigInt!
+  user: Bytes!
+  billionsIds: [BigInt!]!
+  scalarIds: [BigInt!]!
 }

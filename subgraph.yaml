@@ -109,30 +109,31 @@ dataSources:
     name: Battle
     network: mumbai
     source:
-      address: "0x574Ce373627a42C61a2C61F556014CCE070462DD"
+      address: "0x8943097C096Cb6b0F2eeB00140e3146a31F8EA2F"
       abi: Battle
-      startBlock: 38620508
+      startBlock: 38803269
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Battle
+        - Participant
       abis:
         - name: Battle
           file: ./abis/Battle.json
       eventHandlers:
         # - event: OwnershipTransferred(indexed address,indexed address)
         #   handler: handleOwnershipTransferred
-        # - event: _BattleStateChanged(uint256,uint256)
-        #   handler: handleBattleStateChanged
-        # - event: _BetBattle(uint256,address,uint256[],uint256[])
-        #   handler: handleBetBattle
+        - event: _BattleStateChanged(uint256,uint256)
+          handler: handleBattleStateChanged
+        - event: _BetBattle(uint256,address,uint256[],uint256[])
+          handler: handleBetBattle
         # - event: _ClaimedBonus(uint256,address,uint256)
         #   handler: handleClaimedBonus
         # - event: _ClaimedReward(uint256,address,uint256)
         #   handler: handleClaimedReward
-        - event: _CreateBattle(uint256)
+        - event: _CreateBattle(uint256,indexed address,string,uint256,uint256,uint256,uint256,uint256)
           handler: handle_CreateBattle
         # - event: _SendReward2Owner(uint256,address,address,uint256)
         #   handler: handleSendReward2Owner
