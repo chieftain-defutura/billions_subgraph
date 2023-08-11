@@ -17,6 +17,7 @@ dataSources:
         - User
         - Marketplace
         - Bidder
+        - TotalCounts
       abis:
         - name: MarketPlace
           file: ./abis/MarketPlace.json
@@ -109,9 +110,9 @@ dataSources:
     name: Battle
     network: mumbai
     source:
-      address: "0x8943097C096Cb6b0F2eeB00140e3146a31F8EA2F"
+      address: "0x0275E6351cD8220f3B6bbAF9E457E52B9A9755bE"
       abi: Battle
-      startBlock: 38803269
+      startBlock: 38838280
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

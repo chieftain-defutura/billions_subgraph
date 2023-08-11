@@ -1,11 +1,7 @@
-import {
-  _BattleStateChanged,
-  _BetBattle,
-  _CreateBattle,
-} from "../generated/Battle/Battle";
+import { _BattleStateChanged, _BetBattle, _CreateBattle } from "../generated/Battle/Battle";
 import { Battle, Participant } from "../generated/schema";
 
-export function handleCreateBattle(event: _CreateBattle): void {
+export function handle_CreateBattle(event: _CreateBattle): void {
   let battle = new Battle(event.params._battleId.toString());
 
   battle.battleId = event.params._battleId;
@@ -16,15 +12,15 @@ export function handleCreateBattle(event: _CreateBattle): void {
   battle.nftCount = event.params.nftCount;
   battle.participants = [];
   battle.owner = event.params.owner.toHexString();
-  battle.battleType =
-    event.params.battleType.toString() == "0" ? "Health" : "Blood";
+  battle.battleType = event.params.battleType.toString() == "0" ? "Health" : "Blood";
   battle.battleStatus = "Betting";
 
   battle.save();
 }
 
 export function handleBetBattle(event: _BetBattle): void {
-  let participant = new Participant(event.transaction.hash.toString());
+  let id = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+  let participant = new Participant(id);
 
   participant.battleId = event.params._battleId;
   participant.user = event.params._playerAddress;

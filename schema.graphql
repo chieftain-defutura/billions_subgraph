@@ -20,6 +20,7 @@ type RentedNft @entity {
 
 type Bidder @entity {
   id: ID!
+  auctionId: String!
   bidder: Bytes!
   bidTime: BigInt!
   bidAmount: BigInt!
@@ -27,6 +28,7 @@ type Bidder @entity {
 
 type Marketplace @entity {
   id: ID!
+  auctionId: String!
   symbol: String!
   isAuction: Boolean!
   basePrice: BigInt!
@@ -38,6 +40,7 @@ type Marketplace @entity {
   tokenId: BigInt
   buyer: Bytes
   endTime: BigInt
+  createdAt: BigInt!
 }
 
 type ScalarNFT @entity {
@@ -88,4 +91,10 @@ type Participant @entity {
   user: Bytes!
   billionsIds: [BigInt!]!
   scalarIds: [BigInt!]!
+}
+
+type TotalCount @entity {
+  id: ID!
+  totalAuctions: BigInt!
+  totalFixedSales: BigInt!
 }
