@@ -20,7 +20,7 @@ type RentedNft @entity {
 
 type Bidder @entity {
   id: ID!
-  auctionId: String!
+  auction: Marketplace!
   bidder: Bytes!
   bidTime: BigInt!
   bidAmount: BigInt!
@@ -35,7 +35,7 @@ type Marketplace @entity {
   currentBidPrice: BigInt
   creator: Bytes!
   currentHighestBidder: Bytes!
-  bidders: [Bidder!]!
+  bidders: [Bidder!] @derivedFrom(field: "auction")
   status: Status!
   tokenId: BigInt
   buyer: Bytes

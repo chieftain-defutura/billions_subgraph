@@ -27,7 +27,6 @@ export function handle_CreateAuction(event: _CreateAuction): void {
     auction.basePrice = min;
     auction.currentBidPrice = null;
     auction.status = "Pending";
-    auction.bidders = [];
     auction.symbol = symbol[i];
     auction.endTime = event.params._endTime;
     auction.createdAt = event.block.timestamp;
@@ -57,7 +56,7 @@ export function handle_Bid(event: _Bid): void {
 
   let bidderInfo = new Bidder(bidderInfoId);
   bidderInfo.bidTime = event.block.timestamp;
-  bidderInfo.auctionId = auctionId;
+  bidderInfo.auction = auctionId;
   bidderInfo.bidAmount = bidAmount;
   bidderInfo.bidder = bidder;
   bidderInfo.save();
@@ -65,9 +64,9 @@ export function handle_Bid(event: _Bid): void {
   auction.currentHighestBidder = bidder;
   auction.currentBidPrice = bidAmount;
 
-  let bidders = auction.bidders || [];
-  bidders.push(bidderInfo.id);
-  auction.bidders = bidders;
+  // let bidders = auction.bidders || [];
+  // bidders.push(bidderInfo.id);
+  // auction.bidders = bidders;
 
   auction.save();
 }
@@ -87,7 +86,6 @@ export function handle_CreateFixedSale(event: _CreateFixedSale): void {
   auction.creator = owner;
   auction.basePrice = price;
   auction.currentBidPrice = price;
-  auction.bidders = [];
   auction.tokenId = tokenId;
   auction.status = "Pending";
   auction.createdAt = event.block.timestamp;

@@ -2,16 +2,22 @@ import {
   MintNft as MintNftEvent,
   Transfer as TransferEvent,
 } from "../generated/ScalarNFT/ScalarNFT";
-import { ScalarNFT } from "../generated/schema";
+import { ScalarNFT, User } from "../generated/schema";
 
 export function handleTransfer(event: TransferEvent): void {
   let token = ScalarNFT.load(event.params.tokenId.toString());
   if (!token) {
-    let token = new ScalarNFT(event.params.tokenId.toString());
-    token.owner = event.params.to.toHexString();
+    token = new ScalarNFT(event.params.tokenId.toString());
     token.tokenId = event.params.tokenId;
+  }
+  token.owner = event.params.to.toHexString();
+  token.save();
 
-    token.save();
+  let user = User.load(event.params.to.toHexString());
+
+  if (!user) {
+    let user = new User(event.params.to.toHexString());
+    user.save();
   }
 }
 

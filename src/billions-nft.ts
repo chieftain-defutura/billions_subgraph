@@ -12,15 +12,15 @@ export function handleTransfer(event: TransferEvent): void {
   let token = BillionsNFT.load(tokenId);
 
   if (!token) {
-    let token = new BillionsNFT(tokenId);
-    token.owner = event.params.to.toHexString();
+    token = new BillionsNFT(tokenId);
     token.tokenId = event.params.tokenId;
     token.symbol = "";
     token.rentPrice = BigInt.zero();
     token.rentable = false;
-
-    token.save();
   }
+
+  token.owner = event.params.to.toHexString();
+  token.save();
 
   let user = User.load(event.params.to.toHexString());
 
