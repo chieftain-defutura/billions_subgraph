@@ -13,7 +13,7 @@ type User @entity {
 
 type RentedNft @entity {
   id: ID!
-  tokenId: BigInt!
+  billionsNft: BillionsNFT!
   battleId: BigInt!
   owner: User!
 }
@@ -29,7 +29,7 @@ type Bidder @entity {
 type Marketplace @entity {
   id: ID!
   auctionId: String!
-  symbol: String!
+  stockSymbol: String!
   isAuction: Boolean!
   basePrice: BigInt!
   currentBidPrice: BigInt
@@ -54,8 +54,9 @@ type BillionsNFT @entity {
   id: ID!
   tokenId: BigInt!
   owner: User!
-  symbol: String!
+  stockSymbol: String!
   rentPrice: BigInt!
+  sellingPrice: BigInt!
   rentable: Boolean!
 }
 
@@ -83,14 +84,15 @@ type Battle @entity {
   nftCount: BigInt!
   owner: User!
   participants: [Participant!]!
+  totalParticipants: BigInt!
 }
 
 type Participant @entity {
   id: ID!
   battleId: BigInt!
-  user: Bytes!
-  billionsIds: [BigInt!]!
-  scalarIds: [BigInt!]!
+  user: User!
+  billionsIds: [BillionsNFT!]!
+  scalarIds: [ScalarNFT!]!
 }
 
 type TotalCount @entity {

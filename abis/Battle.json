@@ -1,6 +1,22 @@
 [
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_playTokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_billionsNftAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_scalarNftAddress",
+        "type": "address"
+      }
+    ],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -189,6 +205,49 @@
       },
       {
         "indexed": false,
+        "internalType": "address[]",
+        "name": "rank1",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "rank2",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "rank3",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "rank4",
+        "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "address[]",
+        "name": "_ranks",
+        "type": "address[]"
+      }
+    ],
+    "name": "_EndBattle",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_battleId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "_creator",
         "type": "address"
@@ -337,7 +396,27 @@
       },
       {
         "internalType": "address[]",
-        "name": "_rank",
+        "name": "_fivePercentileHolders",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_tenPercentileHolders",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_twentyPercentileHolders",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_fourtyFivePercentileHolders",
+        "type": "address[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_topFiveRanks",
         "type": "address[]"
       }
     ],
@@ -688,7 +767,7 @@
       },
       {
         "internalType": "address",
-        "name": "_playToken",
+        "name": "_plyToken",
         "type": "address"
       }
     ],
@@ -906,6 +985,58 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "ranks",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "setBonusPercent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "leader",
+        "type": "uint256"
+      }
+    ],
+    "name": "setLeaderBonus",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "rake",
+        "type": "uint256"
+      }
+    ],
+    "name": "setRakePercent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "ranks",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "setRewardPercent",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

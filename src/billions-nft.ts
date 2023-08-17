@@ -14,11 +14,12 @@ export function handleTransfer(event: TransferEvent): void {
   if (!token) {
     token = new BillionsNFT(tokenId);
     token.tokenId = event.params.tokenId;
-    token.symbol = "";
-    token.rentPrice = BigInt.zero();
-    token.rentable = false;
+    token.stockSymbol = "";
   }
 
+  token.rentPrice = BigInt.zero();
+  token.sellingPrice = BigInt.zero();
+  token.rentable = false;
   token.owner = event.params.to.toHexString();
   token.save();
 
@@ -37,12 +38,12 @@ export function handleBillionsNftMint(event: _BillionsNftMintEvent): void {
     token = new BillionsNFT(event.params.tokenId.toString());
     token.owner = event.params.owner.toHexString();
     token.tokenId = event.params.tokenId;
-    token.symbol = event.params.symbol;
+    token.stockSymbol = event.params.symbol;
     token.rentPrice = BigInt.zero();
     token.rentable = false;
   }
 
-  token.symbol = event.params.symbol;
+  token.stockSymbol = event.params.symbol;
   token.save();
 
   let user = User.load(event.params.owner.toHexString());
@@ -72,7 +73,7 @@ export function handleRentNft(event: _RentNftEvent): void {
   let rentedNft = new RentedNft(id);
 
   rentedNft.battleId = event.params.battleId;
-  rentedNft.tokenId = event.params.tokenId;
+  rentedNft.billionsNft = event.params.tokenId.toString();
   rentedNft.owner = event.params.user.toHexString();
   rentedNft.save();
 }

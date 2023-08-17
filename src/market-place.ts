@@ -27,7 +27,7 @@ export function handle_CreateAuction(event: _CreateAuction): void {
     auction.basePrice = min;
     auction.currentBidPrice = null;
     auction.status = "Pending";
-    auction.symbol = symbol[i];
+    auction.stockSymbol = symbol[i];
     auction.endTime = event.params._endTime;
     auction.createdAt = event.block.timestamp;
     auction.save();
@@ -94,7 +94,7 @@ export function handle_CreateFixedSale(event: _CreateFixedSale): void {
   let battleNftContract = BillionsNFT.bind(marketplaceContract.billionsNftAddress());
 
   let data = battleNftContract.nftInfos(tokenId);
-  auction.symbol = data.getSymbol();
+  auction.stockSymbol = data.getSymbol();
 
   auction.save();
 
