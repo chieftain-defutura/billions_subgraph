@@ -6,7 +6,7 @@ import {
   _EndBattle as EndBattleEvent,
   Battle as BattleContract,
 } from "../generated/Battle/Battle";
-import { Battle, Participant, User } from "../generated/schema";
+import { Battle, Participant, User, Bonus, Reward } from "../generated/schema";
 
 export function handle_CreateBattle(event: _CreateBattle): void {
   let battle = new Battle(event.params._battleId.toString());
@@ -21,7 +21,8 @@ export function handle_CreateBattle(event: _CreateBattle): void {
   battle.bonuses = [];
   battle.rewards = [];
   battle.owner = event.params.owner.toHexString();
-  battle.battleType = event.params.battleType.toString() == "0" ? "Health" : "Blood";
+  battle.battleType =
+    event.params.battleType.toString() == "0" ? "Health" : "Blood";
   battle.battleStatus = "Betting";
   battle.totalParticipants = BigInt.zero();
 
@@ -100,10 +101,91 @@ export function handleBattleStateChanged(event: _BattleStateChanged): void {
 }
 
 export function handleEndBattle(event: EndBattleEvent): void {
-  let battle = event.params._battleId.toString();
+  let battleId = event.params._battleId.toString();
+  let battle = Battle.load(battleId);
 
   if (!battle) return;
 
   let battleContract = BattleContract.bind(event.address);
   let battleInfo = battleContract.GetBattle(event.params._battleId);
+
+  for (let i = 0; i < event.params._ranks.length; i++) {
+    let bonusAddress = event.params._ranks[i];
+    let id = battleId + "-" + bonusAddress.toHexString();
+    let bonus = new Bonus(id);
+    bonus.battle = battleId;
+    bonus.isClaimed = false;
+    bonus.player = bonusAddress;
+    bonus.amount = BigInt.zero();
+    bonus.save();
+
+    let bonusesList = battle.bonuses;
+    bonusesList.push(bonus.id);
+    battle.bonuses = bonusesList;
+    battle.save();
+  }
+
+  for (let i = 0; i < event.params.rank1.length; i++) {
+    let rewardAddress = event.params.rank1[i];
+    let id = battleId + "-" + rewardAddress.toHexString();
+    let reward = new Reward(id);
+    reward.battle = battleId;
+    reward.isClaimed = false;
+    reward.player = rewardAddress;
+    reward.amount = BigInt.zero();
+    reward.save();
+
+    let rewardsList = battle.rewards;
+    rewardsList.push(reward.id);
+    battle.rewards = rewardsList;
+    battle.save();
+  }
+
+  for (let i = 0; i < event.params.rank2.length; i++) {
+    let rewardAddress = event.params.rank2[i];
+    let id = battleId + "-" + rewardAddress.toHexString();
+    let reward = new Reward(id);
+    reward.battle = battleId;
+    reward.isClaimed = false;
+    reward.player = rewardAddress;
+    reward.amount = BigInt.zero();
+    reward.save();
+
+    let rewardsList = battle.rewards;
+    rewardsList.push(reward.id);
+    battle.rewards = rewardsList;
+    battle.save();
+  }
+
+  for (let i = 0; i < event.params.rank3.length; i++) {
+    let rewardAddress = event.params.rank3[i];
+    let id = battleId + "-" + rewardAddress.toHexString();
+    let reward = new Reward(id);
+    reward.battle = battleId;
+    reward.isClaimed = false;
+    reward.player = rewardAddress;
+    reward.amount = BigInt.zero();
+    reward.save();
+
+    let rewardsList = battle.rewards;
+    rewardsList.push(reward.id);
+    battle.rewards = rewardsList;
+    battle.save();
+  }
+
+  for (let i = 0; i < event.params.rank4.length; i++) {
+    let rewardAddress = event.params._ranks[i];
+    let id = battleId + "-" + rewardAddress.toHexString();
+    let reward = new Reward(id);
+    reward.battle = battleId;
+    reward.isClaimed = false;
+    reward.player = rewardAddress;
+    reward.amount = BigInt.zero();
+    reward.save();
+
+    let rewardsList = battle.rewards;
+    rewardsList.push(reward.id);
+    battle.rewards = rewardsList;
+    battle.save();
+  }
 }

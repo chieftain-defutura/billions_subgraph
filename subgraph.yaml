@@ -121,6 +121,8 @@ dataSources:
         - Battle
         - Participant
         - User
+        - Reward
+        - Bonus
       abis:
         - name: Battle
           file: ./abis/Battle.json

@@ -108,6 +108,7 @@ type Reward @entity {
   battle: Battle!
   player: Bytes!
   amount: BigInt!
+  isClaimed: Boolean!
 }
 
 type Bonus @entity {
@@ -115,4 +116,5 @@ type Bonus @entity {
   battle: Battle!
   player: Bytes!
   amount: BigInt!
+  isClaimed: Boolean!
 }
