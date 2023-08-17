@@ -74,9 +74,9 @@ dataSources:
     name: BillionsNFT
     network: mumbai
     source:
-      address: "0xd3fEa44Eba2210a5cF554F905826fa41014A7F01"
+      address: "0x32Fc642F4605a6218BFD8eCc4a10cDbc644C11B3"
       abi: BillionsNFT
-      startBlock: 38767041
+      startBlock: 39082558
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -99,7 +99,7 @@ dataSources:
           handler: handleTransfer
         - event: _BillionsNftMint(uint256,string,address)
           handler: handleBillionsNftMint
-        - event: _RentNft(uint256,uint256,indexed address)
+        - event: _RentNft(uint256,uint256[],indexed address)
           handler: handleRentNft
         - event: _UpdateRentalStatus(uint256,uint256,bool)
           handler: handleUpdateRentalStatus

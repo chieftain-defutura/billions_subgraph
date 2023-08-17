@@ -68,12 +68,20 @@ export function handleUpdateRentalStatus(event: _UpdateRentalStatusEvent): void 
 }
 
 export function handleRentNft(event: _RentNftEvent): void {
-  let id = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+  let tokenIds = event.params.tokenId;
+  let owner = event.params.user.toHexString();
+  let battleId = event.params.battleId;
 
-  let rentedNft = new RentedNft(id);
+  for (let i = 0; i < tokenIds.length; i++) {
+    let tokenId = tokenIds[i];
 
-  rentedNft.battleId = event.params.battleId;
-  rentedNft.billionsNft = event.params.tokenId.toString();
-  rentedNft.owner = event.params.user.toHexString();
-  rentedNft.save();
+    let id = owner + "-" + tokenId.toString() + "-" + battleId.toString();
+
+    let rentedNft = new RentedNft(id);
+
+    rentedNft.battleId = battleId;
+    rentedNft.billionsNft = tokenId.toString();
+    rentedNft.owner = owner;
+    rentedNft.save();
+  }
 }

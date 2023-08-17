@@ -10,6 +10,11 @@
         "internalType": "string",
         "name": "_symbol",
         "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_playTokenAddress",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -145,9 +150,9 @@
       },
       {
         "indexed": false,
-        "internalType": "uint256",
+        "internalType": "uint256[]",
         "name": "tokenId",
-        "type": "uint256"
+        "type": "uint256[]"
       },
       {
         "indexed": true,
@@ -182,6 +187,25 @@
       }
     ],
     "name": "_UpdateRentalStatus",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sellingPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "_UpdateSellingPrice",
     "type": "event"
   },
   {
@@ -387,6 +411,25 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "isVerifiedAddress",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_to",
         "type": "address"
       },
@@ -415,7 +458,7 @@
         "type": "string"
       }
     ],
-    "name": "mintByERC20",
+    "name": "mintByAdmin",
     "outputs": [
       {
         "internalType": "uint256",
@@ -486,6 +529,11 @@
         "internalType": "uint256",
         "name": "rentPrice",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "sellingPrice",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -551,9 +599,9 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "_tokenId",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "_tokenIds",
+        "type": "uint256[]"
       }
     ],
     "name": "rentAnNft",
@@ -923,6 +971,24 @@
       }
     ],
     "name": "updateNftRentingStatus",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_newSellingPrice",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateSellingPrice",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
