@@ -85,6 +85,8 @@ type Battle @entity {
   owner: User!
   participants: [Participant!]!
   totalParticipants: BigInt!
+  rewards: [Reward!]!
+  bonuses: [Bonus!]!
 }
 
 type Participant @entity {
@@ -99,4 +101,18 @@ type TotalCount @entity {
   id: ID!
   totalAuctions: BigInt!
   totalFixedSales: BigInt!
+}
+
+type Reward @entity {
+  id: ID!
+  battle: Battle!
+  player: Bytes!
+  amount: BigInt!
+}
+
+type Bonus @entity {
+  id: ID!
+  battle: Battle!
+  player: Bytes!
+  amount: BigInt!
 }

@@ -120,6 +120,7 @@ dataSources:
       entities:
         - Battle
         - Participant
+        - User
       abis:
         - name: Battle
           file: ./abis/Battle.json
@@ -138,6 +139,6 @@ dataSources:
           handler: handle_CreateBattle
         # - event: _SendReward2Owner(uint256,address,address,uint256)
         #   handler: handleSendReward2Owner
-        # - event: _Withdraw(address,uint256)
-        #   handler: handleWithdraw
+        - event: _EndBattle(uint256,address[],address[],address[],address[],address[])
+          handler: handleEndBattle
       file: ./src/battle.ts

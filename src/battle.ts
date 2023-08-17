@@ -1,6 +1,12 @@
 import { BigInt } from "@graphprotocol/graph-ts";
-import { _BattleStateChanged, _BetBattle, _CreateBattle } from "../generated/Battle/Battle";
-import { Battle, Participant } from "../generated/schema";
+import {
+  _BattleStateChanged,
+  _BetBattle,
+  _CreateBattle,
+  _EndBattle as EndBattleEvent,
+  Battle as BattleContract,
+} from "../generated/Battle/Battle";
+import { Battle, Participant, User } from "../generated/schema";
 
 export function handle_CreateBattle(event: _CreateBattle): void {
   let battle = new Battle(event.params._battleId.toString());
@@ -12,12 +18,21 @@ export function handle_CreateBattle(event: _CreateBattle): void {
   battle.entryfee = event.params.entryFee;
   battle.nftCount = event.params.nftCount;
   battle.participants = [];
+  battle.bonuses = [];
+  battle.rewards = [];
   battle.owner = event.params.owner.toHexString();
   battle.battleType = event.params.battleType.toString() == "0" ? "Health" : "Blood";
   battle.battleStatus = "Betting";
   battle.totalParticipants = BigInt.zero();
 
   battle.save();
+
+  let user = User.load(event.params.owner.toHexString());
+
+  if (!user) {
+    let user = new User(event.params.owner.toHexString());
+    user.save();
+  }
 }
 
 export function handleBetBattle(event: _BetBattle): void {
@@ -52,6 +67,13 @@ export function handleBetBattle(event: _BetBattle): void {
   battle.participants = newParticipants;
   battle.totalParticipants = battle.totalParticipants.plus(BigInt.fromI32(1));
   battle.save();
+
+  let user = User.load(event.params._playerAddress.toHexString());
+
+  if (!user) {
+    let user = new User(event.params._playerAddress.toHexString());
+    user.save();
+  }
 }
 
 export function handleBattleStateChanged(event: _BattleStateChanged): void {
@@ -75,4 +97,13 @@ export function handleBattleStateChanged(event: _BattleStateChanged): void {
   }
 
   battle.save();
+}
+
+export function handleEndBattle(event: EndBattleEvent): void {
+  let battle = event.params._battleId.toString();
+
+  if (!battle) return;
+
+  let battleContract = BattleContract.bind(event.address);
+  let battleInfo = battleContract.GetBattle(event.params._battleId);
 }

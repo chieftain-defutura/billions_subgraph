@@ -8,7 +8,7 @@ import {
   _CancelFixedSale as _CancelFixedSaleEvent,
 } from "../generated/MarketPlace/MarketPlace";
 import { BillionsNFT } from "../generated/MarketPlace/BillionsNFT";
-import { Marketplace, Bidder, TotalCount } from "../generated/schema";
+import { Marketplace, Bidder, TotalCount, User } from "../generated/schema";
 import { BigInt } from "@graphprotocol/graph-ts";
 
 export function handle_CreateAuction(event: _CreateAuction): void {
@@ -41,6 +41,13 @@ export function handle_CreateAuction(event: _CreateAuction): void {
       totalCounts.totalAuctions = totalCounts.totalAuctions.plus(BigInt.fromI32(1));
     }
     totalCounts.save();
+  }
+
+  let user = User.load(event.params.owner.toHexString());
+
+  if (!user) {
+    let user = new User(event.params.owner.toHexString());
+    user.save();
   }
 }
 
