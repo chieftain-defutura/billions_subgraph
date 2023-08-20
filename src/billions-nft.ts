@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import {
   Transfer as TransferEvent,
   _BillionsNftMint as _BillionsNftMintEvent,
@@ -27,6 +27,7 @@ export function handleTransfer(event: TransferEvent): void {
 
   if (!user) {
     let user = new User(event.params.to.toHexString());
+    user.totalPercentile = BigDecimal.zero();
     user.save();
   }
 }
@@ -50,6 +51,7 @@ export function handleBillionsNftMint(event: _BillionsNftMintEvent): void {
 
   if (!user) {
     let user = new User(event.params.owner.toHexString());
+    user.totalPercentile = BigDecimal.zero();
     user.save();
   }
 }

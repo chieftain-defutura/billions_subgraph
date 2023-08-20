@@ -9,7 +9,7 @@ import {
 } from "../generated/MarketPlace/MarketPlace";
 import { BillionsNFT } from "../generated/MarketPlace/BillionsNFT";
 import { Marketplace, Bidder, TotalCount, User } from "../generated/schema";
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, BigDecimal } from "@graphprotocol/graph-ts";
 
 export function handle_CreateAuction(event: _CreateAuction): void {
   let owner = event.params.owner;
@@ -26,7 +26,7 @@ export function handle_CreateAuction(event: _CreateAuction): void {
     auction.creator = owner;
     auction.basePrice = min;
     auction.currentBidPrice = null;
-    auction.status = "Pending";
+    auction.status = "PENDING";
     auction.stockSymbol = symbol[i];
     auction.endTime = event.params._endTime;
     auction.createdAt = event.block.timestamp;
@@ -47,6 +47,7 @@ export function handle_CreateAuction(event: _CreateAuction): void {
 
   if (!user) {
     let user = new User(event.params.owner.toHexString());
+    user.totalPercentile = BigDecimal.zero();
     user.save();
   }
 }
@@ -94,7 +95,7 @@ export function handle_CreateFixedSale(event: _CreateFixedSale): void {
   auction.basePrice = price;
   auction.currentBidPrice = price;
   auction.tokenId = tokenId;
-  auction.status = "Pending";
+  auction.status = "PENDING";
   auction.createdAt = event.block.timestamp;
 
   let marketplaceContract = MarketPlace.bind(event.address);
@@ -128,7 +129,7 @@ export function handle_Buy(event: _Buy): void {
 
   auction.currentHighestBidder = buyer;
   auction.buyer = buyer;
-  auction.status = "Finished";
+  auction.status = "FINISHED";
   auction.save();
 
   let totalCounts = TotalCount.load("1");
@@ -153,7 +154,7 @@ export function handle_Claim(event: _Claim): void {
 
   auction.currentHighestBidder = owner;
   auction.tokenId = tokenId;
-  auction.status = "Finished";
+  auction.status = "FINISHED";
   auction.save();
 
   let totalCounts = TotalCount.load("1");
@@ -174,7 +175,7 @@ export function handle_CancelFixedSale(event: _CancelFixedSaleEvent): void {
 
   if (!marketplace) return;
 
-  marketplace.status = "Cancelled";
+  marketplace.status = "CANCELLED";
   marketplace.save();
 
   let totalCounts = TotalCount.load("1");

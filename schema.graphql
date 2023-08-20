@@ -1,14 +1,16 @@
 enum Status {
-  Pending
-  Cancelled
-  Finished
+  PENDING
+  CANCELLED
+  FINISHED
 }
 
 type User @entity {
   id: ID!
+  totalPercentile: BigDecimal!
   scalarNft: [ScalarNFT!] @derivedFrom(field: "owner")
   billionsNft: [BillionsNFT!] @derivedFrom(field: "owner")
   rentedNfts: [RentedNft!] @derivedFrom(field: "owner")
+  participatedList: [Participant!] @derivedFrom(field: "user")
 }
 
 type RentedNft @entity {
@@ -61,15 +63,15 @@ type BillionsNFT @entity {
 }
 
 enum BattleType {
-  Health
-  Blood
+  HEALTH
+  BLOOD
 }
 
 enum BattleStatus {
-  Started
-  Ended
-  Expired
-  Betting
+  STARTED
+  ENDED
+  EXPIRED
+  BETTING
 }
 
 type Battle @entity {
@@ -85,36 +87,24 @@ type Battle @entity {
   owner: User!
   participants: [Participant!]!
   totalParticipants: BigInt!
-  rewards: [Reward!]!
-  bonuses: [Bonus!]!
 }
 
 type Participant @entity {
   id: ID!
-  battleId: BigInt!
+  battle: Battle!
   user: User!
   billionsIds: [BillionsNFT!]!
   scalarIds: [ScalarNFT!]!
+  isRewardClaimed: Boolean!
+  isBonusClaimed: Boolean!
+  bonusAmount: BigInt!
+  rewardAmount: BigInt!
+  rank: BigInt
+  percentile: BigDecimal!
 }
 
 type TotalCount @entity {
   id: ID!
   totalAuctions: BigInt!
   totalFixedSales: BigInt!
-}
-
-type Reward @entity {
-  id: ID!
-  battle: Battle!
-  player: Bytes!
-  amount: BigInt!
-  isClaimed: Boolean!
-}
-
-type Bonus @entity {
-  id: ID!
-  battle: Battle!
-  player: Bytes!
-  amount: BigInt!
-  isClaimed: Boolean!
 }

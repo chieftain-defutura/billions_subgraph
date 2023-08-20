@@ -121,8 +121,6 @@ dataSources:
         - Battle
         - Participant
         - User
-        - Reward
-        - Bonus
       abis:
         - name: Battle
           file: ./abis/Battle.json
@@ -133,10 +131,10 @@ dataSources:
           handler: handleBattleStateChanged
         - event: _BetBattle(uint256,address,uint256[],uint256[])
           handler: handleBetBattle
-        # - event: _ClaimedBonus(uint256,address,uint256)
-        #   handler: handleClaimedBonus
-        # - event: _ClaimedReward(uint256,address,uint256)
-        #   handler: handleClaimedReward
+        - event: _ClaimedBonus(uint256,address,uint256)
+          handler: handleClaimedBonus
+        - event: _ClaimedReward(uint256,address,uint256)
+          handler: handleClaimedReward
         - event: _CreateBattle(uint256,indexed address,string,uint256,uint256,uint256,uint256,uint256)
           handler: handle_CreateBattle
         # - event: _SendReward2Owner(uint256,address,address,uint256)

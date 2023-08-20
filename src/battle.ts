@@ -1,12 +1,14 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt, log } from "@graphprotocol/graph-ts";
 import {
   _BattleStateChanged,
   _BetBattle,
   _CreateBattle,
   _EndBattle as EndBattleEvent,
   Battle as BattleContract,
+  _ClaimedReward,
+  _ClaimedBonus,
 } from "../generated/Battle/Battle";
-import { Battle, Participant, User, Bonus, Reward } from "../generated/schema";
+import { Battle, Participant, User } from "../generated/schema";
 
 export function handle_CreateBattle(event: _CreateBattle): void {
   let battle = new Battle(event.params._battleId.toString());
@@ -18,12 +20,9 @@ export function handle_CreateBattle(event: _CreateBattle): void {
   battle.entryfee = event.params.entryFee;
   battle.nftCount = event.params.nftCount;
   battle.participants = [];
-  battle.bonuses = [];
-  battle.rewards = [];
   battle.owner = event.params.owner.toHexString();
-  battle.battleType =
-    event.params.battleType.toString() == "0" ? "Health" : "Blood";
-  battle.battleStatus = "Betting";
+  battle.battleType = event.params.battleType.toString() == "0" ? "HEALTH" : "BLOOD";
+  battle.battleStatus = "BETTING";
   battle.totalParticipants = BigInt.zero();
 
   battle.save();
@@ -32,18 +31,24 @@ export function handle_CreateBattle(event: _CreateBattle): void {
 
   if (!user) {
     let user = new User(event.params.owner.toHexString());
+    user.totalPercentile = BigDecimal.zero();
     user.save();
   }
 }
 
 export function handleBetBattle(event: _BetBattle): void {
-  let id = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+  let id = event.params._battleId.toString() + "-" + event.params._playerAddress.toHexString();
   let nftIds = event.params._nftIds;
   let scalarIds = event.params._scalarIds;
   let participant = new Participant(id);
 
-  participant.battleId = event.params._battleId;
+  participant.battle = event.params._battleId.toString();
   participant.user = event.params._playerAddress.toHexString();
+  participant.isBonusClaimed = false;
+  participant.isRewardClaimed = false;
+  participant.bonusAmount = BigInt.zero();
+  participant.rewardAmount = BigInt.zero();
+  participant.percentile = BigDecimal.zero();
 
   let newNftIds: string[] = [];
   let newScalarIds: string[] = [];
@@ -73,6 +78,7 @@ export function handleBetBattle(event: _BetBattle): void {
 
   if (!user) {
     let user = new User(event.params._playerAddress.toHexString());
+    user.totalPercentile = BigDecimal.zero();
     user.save();
   }
 }
@@ -85,107 +91,201 @@ export function handleBattleStateChanged(event: _BattleStateChanged): void {
   let battleStatus = event.params.state.toString();
 
   if (battleStatus == "0") {
-    battle.battleStatus = "Betting";
+    battle.battleStatus = "BETTING";
   }
   if (battleStatus == "1") {
-    battle.battleStatus = "Started";
+    battle.battleStatus = "STARTED";
   }
   if (battleStatus == "2") {
-    battle.battleStatus = "Ended";
+    battle.battleStatus = "ENDED";
   }
   if (battleStatus == "3") {
-    battle.battleStatus = "Expired";
+    battle.battleStatus = "EXPIRED";
   }
 
   battle.save();
 }
 
-export function handleEndBattle(event: EndBattleEvent): void {
+export function handleClaimedReward(event: _ClaimedReward): void {
+  let player = event.params._player.toHexString();
   let battleId = event.params._battleId.toString();
-  let battle = Battle.load(battleId);
+  let id = battleId + "-" + player;
+
+  let participant = Participant.load(id);
+
+  if (participant != null) {
+    participant.rewardAmount = event.params._amount;
+    participant.isRewardClaimed = true;
+    participant.save();
+  }
+}
+
+export function handleClaimedBonus(event: _ClaimedBonus): void {
+  let player = event.params._player.toHexString();
+  let battleId = event.params._battleId.toString();
+  let id = battleId + "-" + player;
+
+  let participant = Participant.load(id);
+
+  if (participant != null) {
+    participant.rewardAmount = event.params._amount;
+    participant.isRewardClaimed = true;
+    participant.save();
+  }
+}
+
+export function handleEndBattle(event: EndBattleEvent): void {
+  let battleId = event.params._battleId;
+  let battle = Battle.load(battleId.toString());
 
   if (!battle) return;
 
   let battleContract = BattleContract.bind(event.address);
-  let battleInfo = battleContract.GetBattle(event.params._battleId);
+  let leaderBonus = battleContract.leaderBonus();
+  let rakePercent = battleContract.rakePercent();
+  let battleInfo = battleContract.GetBattle(battleId);
+  let playerCount = battleContract.GetPlayerCountInBattle(battleId);
+  let totalAmount = battleInfo.entryFee.times(playerCount);
 
-  for (let i = 0; i < event.params._ranks.length; i++) {
-    let bonusAddress = event.params._ranks[i];
-    let id = battleId + "-" + bonusAddress.toHexString();
-    let bonus = new Bonus(id);
-    bonus.battle = battleId;
-    bonus.isClaimed = false;
-    bonus.player = bonusAddress;
-    bonus.amount = BigInt.zero();
-    bonus.save();
+  let rakePrizePool = totalAmount.times(rakePercent).div(BigInt.fromI32(100));
+  let bonusPrizePool = totalAmount.times(leaderBonus).div(BigInt.fromI32(100));
+  let rewardPrizePool = totalAmount.minus(bonusPrizePool.plus(rakePrizePool));
 
-    let bonusesList = battle.bonuses;
-    bonusesList.push(bonus.id);
-    battle.bonuses = bonusesList;
-    battle.save();
-  }
+  distributeBonuses(battleId, event.params._ranks, event.address);
+
+  let rankIndex = 1;
 
   for (let i = 0; i < event.params.rank1.length; i++) {
     let rewardAddress = event.params.rank1[i];
-    let id = battleId + "-" + rewardAddress.toHexString();
-    let reward = new Reward(id);
-    reward.battle = battleId;
-    reward.isClaimed = false;
-    reward.player = rewardAddress;
-    reward.amount = BigInt.zero();
-    reward.save();
+    let id = battleId.toString() + "-" + rewardAddress.toHexString();
 
-    let rewardsList = battle.rewards;
-    rewardsList.push(reward.id);
-    battle.rewards = rewardsList;
-    battle.save();
+    let playerReward = battleContract.GetPlayerReward(battleId, rewardAddress);
+    let participant = Participant.load(id);
+
+    if (participant != null) {
+      let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
+      let x = totalCalculate.plus(BigInt.fromI32(1));
+      let y = x.toBigDecimal().div(playerCount.toBigDecimal());
+      let percentile = y.times(BigDecimal.fromString("100"));
+
+      participant.percentile = percentile;
+      participant.rank = BigInt.fromI32(rankIndex);
+      participant.rewardAmount = playerReward;
+      participant.save();
+
+      let user = User.load(rewardAddress.toHexString());
+
+      if (user != null) {
+        user.totalPercentile = user.totalPercentile.plus(percentile);
+        user.save();
+      }
+    }
+
+    rankIndex += 1;
   }
 
   for (let i = 0; i < event.params.rank2.length; i++) {
     let rewardAddress = event.params.rank2[i];
-    let id = battleId + "-" + rewardAddress.toHexString();
-    let reward = new Reward(id);
-    reward.battle = battleId;
-    reward.isClaimed = false;
-    reward.player = rewardAddress;
-    reward.amount = BigInt.zero();
-    reward.save();
+    let id = battleId.toString() + "-" + rewardAddress.toHexString();
 
-    let rewardsList = battle.rewards;
-    rewardsList.push(reward.id);
-    battle.rewards = rewardsList;
-    battle.save();
+    let playerReward = battleContract.GetPlayerReward(battleId, rewardAddress);
+    let participant = Participant.load(id);
+
+    if (participant != null) {
+      let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
+      let x = totalCalculate.plus(BigInt.fromI32(1));
+      let y = x.toBigDecimal().div(playerCount.toBigDecimal());
+      let percentile = y.times(BigDecimal.fromString("100"));
+
+      participant.percentile = percentile;
+      participant.rank = BigInt.fromI32(rankIndex);
+      participant.rewardAmount = playerReward;
+      participant.save();
+
+      let user = User.load(rewardAddress.toHexString());
+
+      if (user != null) {
+        user.totalPercentile = user.totalPercentile.plus(percentile);
+        user.save();
+      }
+    }
+
+    rankIndex += 1;
   }
 
   for (let i = 0; i < event.params.rank3.length; i++) {
     let rewardAddress = event.params.rank3[i];
-    let id = battleId + "-" + rewardAddress.toHexString();
-    let reward = new Reward(id);
-    reward.battle = battleId;
-    reward.isClaimed = false;
-    reward.player = rewardAddress;
-    reward.amount = BigInt.zero();
-    reward.save();
+    let id = battleId.toString() + "-" + rewardAddress.toHexString();
 
-    let rewardsList = battle.rewards;
-    rewardsList.push(reward.id);
-    battle.rewards = rewardsList;
-    battle.save();
+    let playerReward = battleContract.GetPlayerReward(battleId, rewardAddress);
+    let participant = Participant.load(id);
+
+    if (participant != null) {
+      let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
+      let x = totalCalculate.plus(BigInt.fromI32(1));
+      let y = x.toBigDecimal().div(playerCount.toBigDecimal());
+      let percentile = y.times(BigDecimal.fromString("100"));
+
+      participant.percentile = percentile;
+      participant.rank = BigInt.fromI32(rankIndex);
+      participant.rewardAmount = playerReward;
+      participant.save();
+
+      let user = User.load(rewardAddress.toHexString());
+
+      if (user != null) {
+        user.totalPercentile = user.totalPercentile.plus(percentile);
+        user.save();
+      }
+    }
+
+    rankIndex += 1;
   }
 
   for (let i = 0; i < event.params.rank4.length; i++) {
-    let rewardAddress = event.params._ranks[i];
-    let id = battleId + "-" + rewardAddress.toHexString();
-    let reward = new Reward(id);
-    reward.battle = battleId;
-    reward.isClaimed = false;
-    reward.player = rewardAddress;
-    reward.amount = BigInt.zero();
-    reward.save();
+    let rewardAddress = event.params.rank4[i];
+    let id = battleId.toString() + "-" + rewardAddress.toHexString();
 
-    let rewardsList = battle.rewards;
-    rewardsList.push(reward.id);
-    battle.rewards = rewardsList;
-    battle.save();
+    let playerReward = battleContract.GetPlayerReward(battleId, rewardAddress);
+    let participant = Participant.load(id);
+
+    if (participant != null) {
+      let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
+      let x = totalCalculate.plus(BigInt.fromI32(1));
+      let y = x.toBigDecimal().div(playerCount.toBigDecimal());
+      let percentile = y.times(BigDecimal.fromString("100"));
+
+      participant.percentile = percentile;
+      participant.rank = BigInt.fromI32(rankIndex);
+      participant.rewardAmount = playerReward;
+      participant.save();
+
+      let user = User.load(rewardAddress.toHexString());
+
+      if (user != null) {
+        user.totalPercentile = user.totalPercentile.plus(percentile);
+        user.save();
+      }
+    }
+
+    rankIndex += 1;
+  }
+}
+
+function distributeBonuses(battleId: BigInt, players: Address[], battleAddress: Address): void {
+  let battleContract = BattleContract.bind(battleAddress);
+
+  for (let i = 0; i < players.length; i++) {
+    let bonusAddress = players[i];
+    let id = battleId.toString() + "-" + bonusAddress.toHexString();
+
+    let playerBonus = battleContract.GetPlayerBonus(battleId, bonusAddress);
+
+    let participant = Participant.load(id);
+
+    if (participant != null) {
+      participant.bonusAmount = playerBonus;
+      participant.save();
+    }
   }
 }

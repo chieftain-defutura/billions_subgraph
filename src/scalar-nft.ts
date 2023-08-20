@@ -1,3 +1,4 @@
+import { BigDecimal } from "@graphprotocol/graph-ts";
 import {
   MintNft as MintNftEvent,
   Transfer as TransferEvent,
@@ -17,6 +18,7 @@ export function handleTransfer(event: TransferEvent): void {
 
   if (!user) {
     let user = new User(event.params.to.toHexString());
+    user.totalPercentile = BigDecimal.zero();
     user.save();
   }
 }
