@@ -111,31 +111,6 @@
         "type": "uint256"
       }
     ],
-    "name": "_ClaimedBonus",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_battleId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_player",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
     "name": "_ClaimedReward",
     "type": "event"
   },
@@ -189,6 +164,12 @@
         "internalType": "uint256",
         "name": "battleType",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "passcode",
+        "type": "string"
       }
     ],
     "name": "_CreateBattle",
@@ -316,22 +297,14 @@
         "internalType": "uint256[]",
         "name": "_scalarIds",
         "type": "uint256[]"
+      },
+      {
+        "internalType": "string",
+        "name": "_passcode",
+        "type": "string"
       }
     ],
     "name": "BetBattle",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_battleId",
-        "type": "uint256"
-      }
-    ],
-    "name": "ClaimBonus",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -380,6 +353,11 @@
         "internalType": "uint256",
         "name": "_endTime",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_passcode",
+        "type": "string"
       }
     ],
     "name": "CreateBattle",
@@ -454,7 +432,7 @@
           },
           {
             "internalType": "address",
-            "name": "creatorAddress",
+            "name": "creator",
             "type": "address"
           },
           {
@@ -491,35 +469,16 @@
             "internalType": "enum BattleContract.BattleState",
             "name": "state",
             "type": "uint8"
+          },
+          {
+            "internalType": "string",
+            "name": "passcode",
+            "type": "string"
           }
         ],
         "internalType": "struct BattleContract.BattleInfo",
         "name": "",
         "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_battleId",
-        "type": "uint256"
-      }
-    ],
-    "name": "GetBonusesInBattle",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
       }
     ],
     "stateMutability": "view",
@@ -556,30 +515,6 @@
         "internalType": "struct BattleContract.PlayerInfo",
         "name": "",
         "type": "tuple"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_battleId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "_userAddress",
-        "type": "address"
-      }
-    ],
-    "name": "GetPlayerBonus",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "claimableAmount",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -879,6 +814,19 @@
   },
   {
     "inputs": [],
+    "name": "lastUnlockTimestamp",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "leaderBonus",
     "outputs": [
       {
@@ -911,6 +859,19 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "quarterInterval",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -953,6 +914,19 @@
     "name": "renounceOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "reserveBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1041,12 +1015,12 @@
   },
   {
     "inputs": [],
-    "name": "sinkReserveAddress",
+    "name": "sinkThreshold",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "uint256",
         "name": "",
-        "type": "address"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1061,6 +1035,13 @@
       }
     ],
     "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unlockReserve",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
