@@ -84,6 +84,7 @@ type Battle @entity {
   endTime: BigInt!
   entryfee: BigInt!
   nftCount: BigInt!
+  passcode: String!
   owner: User!
   participants: [Participant!]!
   totalParticipants: BigInt!
@@ -96,8 +97,6 @@ type Participant @entity {
   billionsIds: [BillionsNFT!]!
   scalarIds: [ScalarNFT!]!
   isRewardClaimed: Boolean!
-  isBonusClaimed: Boolean!
-  bonusAmount: BigInt!
   rewardAmount: BigInt!
   rank: BigInt
   percentile: BigDecimal!

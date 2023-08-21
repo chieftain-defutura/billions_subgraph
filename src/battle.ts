@@ -6,6 +6,7 @@ import {
   _EndBattle as EndBattleEvent,
   Battle as BattleContract,
   _ClaimedReward,
+  _Withdraw as WithdrawEvent,
 } from "../generated/Battle/Battle";
 import { Battle, Participant, User } from "../generated/schema";
 
@@ -18,10 +19,10 @@ export function handle_CreateBattle(event: _CreateBattle): void {
   battle.endTime = event.params.endTime;
   battle.entryfee = event.params.entryFee;
   battle.nftCount = event.params.nftCount;
+  battle.passcode = event.params.passcode;
   battle.participants = [];
   battle.owner = event.params.owner.toHexString();
-  battle.battleType =
-    event.params.battleType.toString() == "0" ? "HEALTH" : "BLOOD";
+  battle.battleType = event.params.battleType.toString() == "0" ? "HEALTH" : "BLOOD";
   battle.battleStatus = "BETTING";
   battle.totalParticipants = BigInt.zero();
 
@@ -37,19 +38,14 @@ export function handle_CreateBattle(event: _CreateBattle): void {
 }
 
 export function handleBetBattle(event: _BetBattle): void {
-  let id =
-    event.params._battleId.toString() +
-    "-" +
-    event.params._playerAddress.toHexString();
+  let id = event.params._battleId.toString() + "-" + event.params._playerAddress.toHexString();
   let nftIds = event.params._nftIds;
   let scalarIds = event.params._scalarIds;
   let participant = new Participant(id);
 
   participant.battle = event.params._battleId.toString();
   participant.user = event.params._playerAddress.toHexString();
-  participant.isBonusClaimed = false;
   participant.isRewardClaimed = false;
-  participant.bonusAmount = BigInt.zero();
   participant.rewardAmount = BigInt.zero();
   participant.percentile = BigDecimal.zero();
 
@@ -258,3 +254,5 @@ export function handleEndBattle(event: EndBattleEvent): void {
     rankIndex += 1;
   }
 }
+
+export function handleWithdraw(event: WithdrawEvent): void {}
