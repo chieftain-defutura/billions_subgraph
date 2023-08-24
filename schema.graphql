@@ -80,6 +80,7 @@ type Battle @entity {
   battleType: BattleType!
   battleStatus: BattleStatus!
   exchange: String!
+  country: String!
   startTime: BigInt!
   endTime: BigInt!
   entryfee: BigInt!

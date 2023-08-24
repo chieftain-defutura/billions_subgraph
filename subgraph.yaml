@@ -110,9 +110,9 @@ dataSources:
     name: Battle
     network: mumbai
     source:
-      address: "0xE5821B4e8b1e8DA36efD96B46D71dd4942805Bf6"
+      address: "0x2Bb38804C3b0689B5f0Be65646773cD1b7795649"
       abi: Battle
-      startBlock: 39264057
+      startBlock: 39309828
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -133,7 +133,7 @@ dataSources:
           handler: handleBetBattle
         - event: _ClaimedReward(uint256,address,uint256)
           handler: handleClaimedReward
-        - event: _CreateBattle(uint256,indexed address,string,uint256,uint256,uint256,uint256,uint256,string)
+        - event: _CreateBattle(uint256,indexed address,string,string,uint256,uint256,uint256,uint256,uint256,string)
           handler: handle_CreateBattle
         - event: _EndBattle(uint256,address[],address[],address[],address[],address[])
           handler: handleEndBattle

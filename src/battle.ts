@@ -15,6 +15,7 @@ export function handle_CreateBattle(event: _CreateBattle): void {
 
   battle.battleId = event.params._battleId;
   battle.exchange = event.params.exchange;
+  battle.country = event.params.country;
   battle.startTime = event.params.startTime;
   battle.endTime = event.params.endTime;
   battle.entryfee = event.params.entryFee;

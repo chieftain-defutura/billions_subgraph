@@ -137,6 +137,12 @@
       },
       {
         "indexed": false,
+        "internalType": "string",
+        "name": "country",
+        "type": "string"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "nftCount",
         "type": "uint256"
@@ -335,6 +341,11 @@
         "type": "string"
       },
       {
+        "internalType": "string",
+        "name": "_country",
+        "type": "string"
+      },
+      {
         "internalType": "uint256",
         "name": "_enterFee",
         "type": "uint256"
@@ -423,6 +434,11 @@
           {
             "internalType": "string",
             "name": "exchange",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "country",
             "type": "string"
           },
           {
