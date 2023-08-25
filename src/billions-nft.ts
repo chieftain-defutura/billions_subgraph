@@ -86,4 +86,12 @@ export function handleRentNft(event: _RentNftEvent): void {
     rentedNft.owner = owner;
     rentedNft.save();
   }
+
+  let user = User.load(owner);
+
+  if (!user) {
+    let user = new User(owner);
+    user.totalPercentile = BigDecimal.zero();
+    user.save();
+  }
 }
