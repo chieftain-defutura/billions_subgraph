@@ -6,9 +6,9 @@ dataSources:
     name: MarketPlace
     network: mumbai
     source:
-      address: "0x01eB8Ae8B0523163764F1490551BD3cB5d8A5044"
+      address: "0x2177A450Df4dA9a0DE35f1904A912bC56c36a208"
       abi: MarketPlace
-      startBlock: 39233753
+      startBlock: 39515082
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -45,9 +45,9 @@ dataSources:
     name: ScalarNFT
     network: mumbai
     source:
-      address: "0xeF00ca97398D3F60169bC44eA9C63567cd2feEfE"
+      address: "0xA8CA2aF9dB4A97AA425E49c87ba80e1116c478AC"
       abi: ScalarNFT
-      startBlock: 39233391
+      startBlock: 39514664
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -110,9 +110,9 @@ dataSources:
     name: Battle
     network: mumbai
     source:
-      address: "0x2Bb38804C3b0689B5f0Be65646773cD1b7795649"
+      address: "0xaCCa6E4778834c1c8B44B8220d14Cf6866E046AB"
       abi: Battle
-      startBlock: 39309828
+      startBlock: 39514785
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
