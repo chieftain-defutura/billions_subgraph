@@ -1,4 +1,4 @@
-import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 import {
   _BattleStateChanged,
   _BetBattle,
@@ -21,7 +21,6 @@ export function handle_CreateBattle(event: _CreateBattle): void {
   battle.entryfee = event.params.entryFee;
   battle.nftCount = event.params.nftCount;
   battle.passcode = event.params.passcode;
-  battle.participants = [];
   battle.owner = event.params.owner.toHexString();
   battle.battleType = event.params.battleType.toString() == "0" ? "HEALTH" : "BLOOD";
   battle.battleStatus = "BETTING";
@@ -66,13 +65,10 @@ export function handleBetBattle(event: _BetBattle): void {
 
   let battle = Battle.load(event.params._battleId.toString());
 
-  if (!battle) return;
-
-  let newParticipants = battle.participants;
-  newParticipants.push(participant.id);
-  battle.participants = newParticipants;
-  battle.totalParticipants = battle.totalParticipants.plus(BigInt.fromI32(1));
-  battle.save();
+  if (battle) {
+    battle.totalParticipants = battle.totalParticipants.plus(BigInt.fromI32(1));
+    battle.save();
+  }
 
   let user = User.load(event.params._playerAddress.toHexString());
 
@@ -127,110 +123,227 @@ export function handleEndBattle(event: EndBattleEvent): void {
   if (!battle) return;
 
   let battleContract = BattleContract.bind(event.address);
-  let leaderBonus = battleContract.leaderBonus();
-  let rakePercent = battleContract.rakePercent();
+
   let battleInfo = battleContract.GetBattle(battleId);
   let playerCount = battleContract.GetPlayerCountInBattle(battleId);
   let totalAmount = battleInfo.entryFee.times(playerCount);
 
-  let rakePrizePool = totalAmount.times(rakePercent).div(BigInt.fromI32(100));
-  let bonusPrizePool = totalAmount.times(leaderBonus).div(BigInt.fromI32(100));
+  let rakePrizePool = event.params.rakePrizepool;
+  let bonusPrizePool = event.params.leaderPrizepool;
   let rewardPrizePool = totalAmount.minus(bonusPrizePool.plus(rakePrizePool));
 
   let rankIndex = 1;
 
-  for (let i = 0; i < event.params.rank1.length; i++) {
-    let rewardAddress = event.params.rank1[i];
-    let id = battleId.toString() + "-" + rewardAddress.toHexString();
+  if (playerCount.lt(BigInt.fromI32(6))) {
+    if (playerCount.equals(BigInt.fromI32(5))) {
+      calculateForLessParticipants(battleId, playerCount, rewardPrizePool, event.params._ranks, [
+        BigInt.fromI32(450),
+        BigInt.fromI32(300),
+        BigInt.fromI32(150),
+        BigInt.fromI32(100),
+        BigInt.fromI32(0),
+      ]);
+    }
+    if (playerCount.equals(BigInt.fromI32(4))) {
+      calculateForLessParticipants(battleId, playerCount, rewardPrizePool, event.params._ranks, [
+        BigInt.fromI32(500),
+        BigInt.fromI32(250),
+        BigInt.fromI32(150),
+        BigInt.fromI32(100),
+        BigInt.fromI32(0),
+      ]);
+    }
+    if (playerCount.equals(BigInt.fromI32(3))) {
+      calculateForLessParticipants(battleId, playerCount, rewardPrizePool, event.params._ranks, [
+        BigInt.fromI32(600),
+        BigInt.fromI32(300),
+        BigInt.fromI32(100),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
+      ]);
+    }
+    if (playerCount.equals(BigInt.fromI32(2))) {
+      calculateForLessParticipants(battleId, playerCount, rewardPrizePool, event.params._ranks, [
+        BigInt.fromI32(900),
+        BigInt.fromI32(100),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
+      ]);
+    }
+    if (playerCount.equals(BigInt.fromI32(1))) {
+      calculateForLessParticipants(battleId, playerCount, rewardPrizePool, event.params._ranks, [
+        BigInt.fromI32(1000),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
+        BigInt.fromI32(0),
+      ]);
+    }
+  } else {
+    // ALLOCATION OF REWARDS TO THE PARTICIPANTS
 
-    let playerReward = battleContract.GetPlayerReward(battleId, rewardAddress);
-    let participant = Participant.load(id);
+    let rewardPercent1 = battleContract.rewardPercent(BigInt.fromI32(0));
+    let rewardPercent2 = battleContract.rewardPercent(BigInt.fromI32(1));
+    let rewardPercent3 = battleContract.rewardPercent(BigInt.fromI32(2));
+    let rewardPercent4 = battleContract.rewardPercent(BigInt.fromI32(3));
 
-    if (participant != null) {
-      let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
-      let x = totalCalculate.plus(BigInt.fromI32(1));
-      let y = x.toBigDecimal().div(playerCount.toBigDecimal());
-      let percentile = y.times(BigDecimal.fromString("100"));
+    let _rank1Rewards = rewardPrizePool.times(rewardPercent1).div(BigInt.fromI32(1000));
+    let _rank2Rewards = rewardPrizePool.times(rewardPercent2).div(BigInt.fromI32(1000));
+    let _rank3Rewards = rewardPrizePool.times(rewardPercent3).div(BigInt.fromI32(1000));
+    let _rank4Rewards = rewardPrizePool.times(rewardPercent4).div(BigInt.fromI32(1000));
 
-      participant.percentile = percentile;
-      participant.rank = BigInt.fromI32(rankIndex);
-      participant.rewardAmount = playerReward;
-      participant.save();
+    for (let i = 0; i < event.params.rank1.length; i++) {
+      let rewardAddress = event.params.rank1[i];
+      let id = battleId.toString() + "-" + rewardAddress.toHexString();
 
-      let user = User.load(rewardAddress.toHexString());
+      let playerReward = _rank1Rewards.div(BigInt.fromI32(event.params.rank1.length));
+      let participant = Participant.load(id);
 
-      if (user != null) {
-        user.totalPercentile = user.totalPercentile.plus(percentile);
-        user.save();
+      if (participant != null) {
+        let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
+        let x = totalCalculate.plus(BigInt.fromI32(1));
+        let y = x.toBigDecimal().div(playerCount.toBigDecimal());
+        let percentile = y.times(BigDecimal.fromString("100"));
+
+        participant.percentile = percentile;
+        participant.rank = BigInt.fromI32(rankIndex);
+        participant.rewardAmount = playerReward;
+        participant.save();
+
+        let user = User.load(rewardAddress.toHexString());
+
+        if (user != null) {
+          user.totalPercentile = user.totalPercentile.plus(percentile);
+          user.save();
+        }
       }
+
+      rankIndex += 1;
     }
 
-    rankIndex += 1;
-  }
+    for (let i = 0; i < event.params.rank2.length; i++) {
+      let rewardAddress = event.params.rank2[i];
+      let id = battleId.toString() + "-" + rewardAddress.toHexString();
 
-  for (let i = 0; i < event.params.rank2.length; i++) {
-    let rewardAddress = event.params.rank2[i];
-    let id = battleId.toString() + "-" + rewardAddress.toHexString();
+      let playerReward = _rank2Rewards.div(BigInt.fromI32(event.params.rank2.length));
+      let participant = Participant.load(id);
 
-    let playerReward = battleContract.GetPlayerReward(battleId, rewardAddress);
-    let participant = Participant.load(id);
+      if (participant != null) {
+        let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
+        let x = totalCalculate.plus(BigInt.fromI32(1));
+        let y = x.toBigDecimal().div(playerCount.toBigDecimal());
+        let percentile = y.times(BigDecimal.fromString("100"));
 
-    if (participant != null) {
-      let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
-      let x = totalCalculate.plus(BigInt.fromI32(1));
-      let y = x.toBigDecimal().div(playerCount.toBigDecimal());
-      let percentile = y.times(BigDecimal.fromString("100"));
+        participant.percentile = percentile;
+        participant.rank = BigInt.fromI32(rankIndex);
+        participant.rewardAmount = playerReward;
+        participant.save();
 
-      participant.percentile = percentile;
-      participant.rank = BigInt.fromI32(rankIndex);
-      participant.rewardAmount = playerReward;
-      participant.save();
+        let user = User.load(rewardAddress.toHexString());
 
-      let user = User.load(rewardAddress.toHexString());
-
-      if (user != null) {
-        user.totalPercentile = user.totalPercentile.plus(percentile);
-        user.save();
+        if (user != null) {
+          user.totalPercentile = user.totalPercentile.plus(percentile);
+          user.save();
+        }
       }
+
+      rankIndex += 1;
     }
 
-    rankIndex += 1;
-  }
+    for (let i = 0; i < event.params.rank3.length; i++) {
+      let rewardAddress = event.params.rank3[i];
+      let id = battleId.toString() + "-" + rewardAddress.toHexString();
 
-  for (let i = 0; i < event.params.rank3.length; i++) {
-    let rewardAddress = event.params.rank3[i];
-    let id = battleId.toString() + "-" + rewardAddress.toHexString();
+      let playerReward = _rank3Rewards.div(BigInt.fromI32(event.params.rank3.length));
+      let participant = Participant.load(id);
 
-    let playerReward = battleContract.GetPlayerReward(battleId, rewardAddress);
-    let participant = Participant.load(id);
+      if (participant != null) {
+        let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
+        let x = totalCalculate.plus(BigInt.fromI32(1));
+        let y = x.toBigDecimal().div(playerCount.toBigDecimal());
+        let percentile = y.times(BigDecimal.fromString("100"));
 
-    if (participant != null) {
-      let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
-      let x = totalCalculate.plus(BigInt.fromI32(1));
-      let y = x.toBigDecimal().div(playerCount.toBigDecimal());
-      let percentile = y.times(BigDecimal.fromString("100"));
+        participant.percentile = percentile;
+        participant.rank = BigInt.fromI32(rankIndex);
+        participant.rewardAmount = playerReward;
+        participant.save();
 
-      participant.percentile = percentile;
-      participant.rank = BigInt.fromI32(rankIndex);
-      participant.rewardAmount = playerReward;
-      participant.save();
+        let user = User.load(rewardAddress.toHexString());
 
-      let user = User.load(rewardAddress.toHexString());
-
-      if (user != null) {
-        user.totalPercentile = user.totalPercentile.plus(percentile);
-        user.save();
+        if (user != null) {
+          user.totalPercentile = user.totalPercentile.plus(percentile);
+          user.save();
+        }
       }
+
+      rankIndex += 1;
     }
 
-    rankIndex += 1;
-  }
+    for (let i = 0; i < event.params.rank4.length; i++) {
+      let rewardAddress = event.params.rank4[i];
+      let id = battleId.toString() + "-" + rewardAddress.toHexString();
 
-  for (let i = 0; i < event.params.rank4.length; i++) {
-    let rewardAddress = event.params.rank4[i];
+      let playerReward = _rank4Rewards.div(BigInt.fromI32(event.params.rank4.length));
+      let participant = Participant.load(id);
+
+      if (participant != null) {
+        let totalCalculate = playerCount.minus(BigInt.fromI32(rankIndex));
+        let x = totalCalculate.plus(BigInt.fromI32(1));
+        let y = x.toBigDecimal().div(playerCount.toBigDecimal());
+        let percentile = y.times(BigDecimal.fromString("100"));
+
+        participant.percentile = percentile;
+        participant.rank = BigInt.fromI32(rankIndex);
+        participant.rewardAmount = playerReward;
+        participant.save();
+
+        let user = User.load(rewardAddress.toHexString());
+
+        if (user != null) {
+          user.totalPercentile = user.totalPercentile.plus(percentile);
+          user.save();
+        }
+      }
+
+      rankIndex += 1;
+    }
+
+    // ALLOCATION OF BONUS TO THE PARTICIPANTS
+
+    for (let i = 0; i < event.params._ranks.length; i++) {
+      const bonusAddress = event.params._ranks[i];
+      let id = battleId.toString() + "-" + bonusAddress.toHexString();
+
+      let playerBonus = bonusPrizePool
+        .times(battleContract.bonusPercent(BigInt.fromI32(i)))
+        .div(BigInt.fromI32(1000));
+      let participant = Participant.load(id);
+
+      if (participant != null) {
+        participant.rewardAmount = participant.rewardAmount.plus(playerBonus);
+        participant.save();
+      }
+    }
+  }
+}
+
+export function handleWithdraw(event: WithdrawEvent): void {}
+
+function calculateForLessParticipants(
+  battleId: BigInt,
+  playerCount: BigInt,
+  rewardPrizePool: BigInt,
+  _ranks: Address[],
+  percent: BigInt[]
+): void {
+  let rankIndex = 1;
+
+  for (let i = 0; i < _ranks.length; i++) {
+    let rewardAddress = _ranks[i];
     let id = battleId.toString() + "-" + rewardAddress.toHexString();
 
-    let playerReward = battleContract.GetPlayerReward(battleId, rewardAddress);
+    let playerReward = rewardPrizePool.times(percent[i]).div(BigInt.fromI32(1000));
     let participant = Participant.load(id);
 
     if (participant != null) {
@@ -255,5 +368,3 @@ export function handleEndBattle(event: EndBattleEvent): void {
     rankIndex += 1;
   }
 }
-
-export function handleWithdraw(event: WithdrawEvent): void {}

@@ -87,7 +87,7 @@ type Battle @entity {
   nftCount: BigInt!
   passcode: String!
   owner: User!
-  participants: [Participant!]!
+  participants: [Participant!]! @derivedFrom(field: "battle")
   totalParticipants: BigInt!
 }
 

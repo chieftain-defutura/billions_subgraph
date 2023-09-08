@@ -6,9 +6,9 @@ dataSources:
     name: MarketPlace
     network: mumbai
     source:
-      address: "0x2177A450Df4dA9a0DE35f1904A912bC56c36a208"
+      address: "0x4D255A50B5D6219aA572713b2A7fA6205114fc9d"
       abi: MarketPlace
-      startBlock: 39515082
+      startBlock: 39891241
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -28,15 +28,15 @@ dataSources:
         #   handler: handleOwnershipTransferred
         # - event: _Accept(uint256,address)
         #   handler: handle_Accept
-        - event: _Bid(uint256,address,uint256)
+        - event: _Bid(uint256,indexed address,uint256)
           handler: handle_Bid
-        - event: _Buy(uint256,address)
+        - event: _Buy(uint256,indexed address)
           handler: handle_Buy
-        - event: _Claim(uint256,uint256,address)
+        - event: _Claim(uint256,uint256,indexed address)
           handler: handle_Claim
         - event: _CreateAuction(uint8[],string[],uint256,uint256,indexed address)
           handler: handle_CreateAuction
-        - event: _CreateFixedSale(uint256,uint256,uint256,address)
+        - event: _CreateFixedSale(uint256,uint256,uint256,indexed address)
           handler: handle_CreateFixedSale
         - event: _CancelFixedSale(uint256)
           handler: handle_CancelFixedSale
@@ -63,7 +63,7 @@ dataSources:
         #   handler: handleApproval
         # - event: ApprovalForAll(indexed address,indexed address,bool)
         #   handler: handleApprovalForAll
-        - event: MintNft(uint256,address,string)
+        - event: MintNft(uint256,indexed address,string)
           handler: handleMintNft
         # - event: OwnershipTransferred(indexed address,indexed address)
         #   handler: handleOwnershipTransferred
@@ -74,9 +74,9 @@ dataSources:
     name: BillionsNFT
     network: mumbai
     source:
-      address: "0x20a0D9c75a8B4Ce52C001aad2c850eecf9B7dC14"
+      address: "0x62eAF47e8eFF64c268e6511b7C4E7eED151f628B"
       abi: BillionsNFT
-      startBlock: 39233391
+      startBlock: 39891237
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -97,7 +97,7 @@ dataSources:
         #   handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-        - event: _BillionsNftMint(uint256,string,address)
+        - event: _BillionsNftMint(uint256,string,indexed address)
           handler: handleBillionsNftMint
         - event: _RentNft(uint256,uint256[],indexed address)
           handler: handleRentNft
@@ -110,9 +110,9 @@ dataSources:
     name: Battle
     network: mumbai
     source:
-      address: "0xaCCa6E4778834c1c8B44B8220d14Cf6866E046AB"
+      address: "0x593ED59202Ac26FC7de59F7b8667F246018DBb28"
       abi: Battle
-      startBlock: 39514785
+      startBlock: 39808083
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -129,13 +129,13 @@ dataSources:
         #   handler: handleOwnershipTransferred
         - event: _BattleStateChanged(uint256,uint256)
           handler: handleBattleStateChanged
-        - event: _BetBattle(uint256,address,uint256[],uint256[])
+        - event: _BetBattle(uint256,indexed address,uint256[],uint256[])
           handler: handleBetBattle
-        - event: _ClaimedReward(uint256,address,uint256)
+        - event: _ClaimedReward(uint256,indexed address,uint256)
           handler: handleClaimedReward
         - event: _CreateBattle(uint256,indexed address,string,string,uint256,uint256,uint256,uint256,uint256,string)
           handler: handle_CreateBattle
-        - event: _EndBattle(uint256,address[],address[],address[],address[],address[])
+        - event: _EndBattle(uint256,address[],address[],address[],address[],address[],uint256,uint256)
           handler: handleEndBattle
         # - event: _SendReward2Owner(uint256,address,address,uint256)
         #   handler: handleSendReward2Owner

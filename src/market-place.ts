@@ -25,7 +25,7 @@ export function handle_CreateAuction(event: _CreateAuction): void {
     auction.currentHighestBidder = owner;
     auction.creator = owner;
     auction.basePrice = min;
-    auction.currentBidPrice = null;
+    auction.currentBidPrice = min;
     auction.status = "PENDING";
     auction.stockSymbol = symbol[i];
     auction.endTime = event.params._endTime;
@@ -60,21 +60,22 @@ export function handle_Bid(event: _Bid): void {
 
   if (!auction) return;
 
-  let bidderInfoId = event.transaction.hash.toHex() + "-" + event.logIndex.toString();
+  let bidderInfoId = auctionId + "-" + bidder.toHexString();
 
-  let bidderInfo = new Bidder(bidderInfoId);
+  let bidderInfo = Bidder.load(bidderInfoId);
+
+  if (!bidderInfo) {
+    bidderInfo = new Bidder(bidderInfoId);
+    bidderInfo.auction = auctionId;
+  }
+
   bidderInfo.bidTime = event.block.timestamp;
-  bidderInfo.auction = auctionId;
   bidderInfo.bidAmount = bidAmount;
   bidderInfo.bidder = bidder;
   bidderInfo.save();
 
   auction.currentHighestBidder = bidder;
   auction.currentBidPrice = bidAmount;
-
-  // let bidders = auction.bidders || [];
-  // bidders.push(bidderInfo.id);
-  // auction.bidders = bidders;
 
   auction.save();
 }
