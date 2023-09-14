@@ -10,6 +10,7 @@ import {
 import { BillionsNFT } from "../generated/MarketPlace/BillionsNFT";
 import { Marketplace, Bidder, TotalCount, User } from "../generated/schema";
 import { BigInt, BigDecimal } from "@graphprotocol/graph-ts";
+import { log } from "matchstick-as";
 
 export function handle_CreateAuction(event: _CreateAuction): void {
   let owner = event.params.owner;

@@ -17,7 +17,7 @@ export function handleTransfer(event: TransferEvent): void {
   let user = User.load(event.params.to.toHexString());
 
   if (!user) {
-    let user = new User(event.params.to.toHexString());
+    user = new User(event.params.to.toHexString());
     user.totalPercentile = BigDecimal.zero();
     user.save();
   }
@@ -37,4 +37,12 @@ export function handleMintNft(event: MintNftEvent): void {
 
   token.value = scalarValue.toString();
   token.save();
+
+  let user = User.load(event.params.user.toHexString());
+
+  if (!user) {
+    user = new User(event.params.user.toHexString());
+    user.totalPercentile = BigDecimal.zero();
+    user.save();
+  }
 }
