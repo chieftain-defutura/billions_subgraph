@@ -110,9 +110,9 @@ dataSources:
     name: Battle
     network: mumbai
     source:
-      address: "0x40b142b7bc4067412045Cc4A056E6857E384d718"
+      address: "0x00302Ce8F44A1ae4634952C1eff6a8E4af42b5a7"
       abi: Battle
-      startBlock: 40069528
+      startBlock: 40139012
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
